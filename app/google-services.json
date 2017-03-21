@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "691097043406",
+    "firebase_url": "https://rpgmessenger.firebaseio.com",
+    "project_id": "rpgmessenger",
+    "storage_bucket": "rpgmessenger.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:691097043406:android:c60fa9f74c3626dd",
+        "android_client_info": {
+          "package_name": "com.rafael.rpg.rpgmessenger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "691097043406-r6skr63ognov5tmacm1eulgq42cfmrip.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rafael.rpg.rpgmessenger",
+            "certificate_hash": "bcb9dadcd41bcec9496c68d3d751b87661e1b0fd"
+          }
+        },
+        {
+          "client_id": "691097043406-l2mtatn79o1abbol4u8ijr33bpi0r9jn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLAuvJyfGRSYSWWEBtJZy8seJuLqAQUno"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "691097043406-l2mtatn79o1abbol4u8ijr33bpi0r9jn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
