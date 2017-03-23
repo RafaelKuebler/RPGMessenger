@@ -60,15 +60,6 @@ public class Register extends AppCompatActivity {
                 else if(pass.equals("")){
                     passwordField.setError("can't be blank");
                 }
-                else if(!user.matches("[A-Za-z0-9]+")){
-                    usernameField.setError("only alphabet or number allowed");
-                }
-                else if(user.length()<5){
-                    usernameField.setError("at least 5 characters long");
-                }
-                else if(pass.length()<5){
-                    passwordField.setError("at least 5 characters long");
-                }
                 else {
                     createAccount(user, pass);
                 }
@@ -83,6 +74,7 @@ public class Register extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    startActivity(new Intent(Register.this, Users.class));
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
