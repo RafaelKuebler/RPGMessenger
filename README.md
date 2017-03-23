@@ -1,7 +1,7 @@
 # RPGMessenger
 
 ## Summary
-**RPGMessenger** is an Android app conceived designed to facilitate playing RPGs over instant messaging in a group.
+**RPGMessenger** is an Android app conceived and designed to facilitate playing RPGs over instant messaging in a group.
 
 ## Screenshots
 *Coming soon!*
