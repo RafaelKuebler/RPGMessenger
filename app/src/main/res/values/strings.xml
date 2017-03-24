@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">RPGMessenger</string>
+    <string name="app_name" translatable="false">RPGMessenger</string>
+    <string name="auth_fail">Authentication failed!</string>
+    <string name="new_group">New Group</string>
+    <string name="settings">Settings</string>
+    <string name="app_info">Information</string>
 </resources>

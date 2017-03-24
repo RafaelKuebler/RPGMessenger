@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_info">Información</string>
+    <string name="auth_fail">Error en la autentificación!</string>
+    <string name="new_group">Grupo nuevo</string>
+    <string name="settings">Ajustes</string>
+</resources>

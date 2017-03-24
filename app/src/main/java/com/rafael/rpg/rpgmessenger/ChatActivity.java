@@ -13,7 +13,7 @@ import android.widget.ScrollView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class Chat extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
     LinearLayout layout;
