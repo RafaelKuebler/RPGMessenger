@@ -73,8 +73,8 @@ public class RegisterActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    startActivity(new Intent(RegisterActivity.this, Users.class));
+                    Log.d(TAG, "onAuthStateChanged:signed_in:Register:" + user.getUid());
+                    startActivity(new Intent(RegisterActivity.this, GroupsActivity.class));
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
