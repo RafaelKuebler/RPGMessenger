@@ -74,6 +74,9 @@ public class GroupsActivity extends AppCompatActivity {
             case R.id.app_info:
                 startActivity(new Intent(GroupsActivity.this, InfoActivity.class));
                 return true;
+            case R.id.log_out:
+                FirebaseAuth.getInstance().signOut();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
