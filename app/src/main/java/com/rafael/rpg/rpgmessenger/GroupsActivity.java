@@ -13,8 +13,13 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.rafael.rpg.messengerclasses.Group;
+import com.rafael.rpg.messengerclasses.User;
 
 public class GroupsActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
@@ -24,6 +29,7 @@ public class GroupsActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
     private DatabaseReference firebaseDB;
+    private User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,10 +45,11 @@ public class GroupsActivity extends AppCompatActivity {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+                if (firebaseUser != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:GroupsActivity:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:GroupsActivity:" + firebaseUser.getUid());
+                    fetchGroups();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -52,9 +59,48 @@ public class GroupsActivity extends AppCompatActivity {
         };
     }
 
+    private void fetchGroups(){
+        Log.d(TAG, "Fetching groups for: " + firebaseAuth.getCurrentUser().getUid());
+        firebaseDB = FirebaseDatabase.getInstance().getReference("users/" + firebaseAuth.getCurrentUser().getUid() + "/groups/");
+
+        firebaseDB.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Found groups: " + dataSnapshot.exists());
+                for(DataSnapshot child : dataSnapshot.getChildren()){
+                    // get the group ID
+                    String groupID = child.getValue().toString();
+                    Log.d(TAG, "GroupNames: " + groupID);
+
+                    // set up listener to get the group data
+                    DatabaseReference firebaseDB2 = FirebaseDatabase.getInstance().getReference("/groups/" + groupID + "/");
+                    firebaseDB2.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            // map the group to a Group.class instance and print the title
+                            Group group = dataSnapshot.getValue(Group.class);
+                            Log.d(TAG, group.getTitle());
+
+                            // create a new element in the listview
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            System.out.println("The read failed: " + databaseError.getCode());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        Log.d(TAG, "creating options menu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_groups, menu);
         return true;

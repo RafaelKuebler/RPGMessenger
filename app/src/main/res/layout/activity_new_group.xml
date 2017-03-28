@@ -48,8 +48,16 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Check availability"
+        android:id="@+id/checkGroupButton"
+        android:layout_marginBottom="20dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:text="Create Group"
         android:id="@+id/createGroupButton"
         android:layout_marginBottom="20dp"/>
+
 
 </LinearLayout>

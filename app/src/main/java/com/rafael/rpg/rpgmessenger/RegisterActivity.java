@@ -16,6 +16,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.rafael.rpg.messengerclasses.User;
 
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
@@ -24,6 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     private Button registerButton;
     private TextView loginView;
     private FirebaseAuth firebaseAuth;
+    private DatabaseReference firebaseDB;
     private FirebaseAuth.AuthStateListener authListener;
 
     @Override
@@ -38,6 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
         loginView = (TextView)findViewById(R.id.login);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDB = FirebaseDatabase.getInstance().getReference();
 
         // if the user wants to login change back to login activity
         loginView.setOnClickListener(new View.OnClickListener() {
@@ -74,6 +79,12 @@ public class RegisterActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:Register:" + user.getUid());
+
+                    Log.d(TAG, "Adding user to user list");
+                    User newUser = new User("Username");
+                    firebaseDB.child("users").child(user.getUid()).setValue(newUser);
+                    Log.d(TAG, "Success");
+
                     startActivity(new Intent(RegisterActivity.this, GroupsActivity.class));
                 } else {
                     // User is signed out
@@ -89,8 +100,6 @@ public class RegisterActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
