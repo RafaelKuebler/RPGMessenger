@@ -17,11 +17,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+/**
+ * Activity that handles the login in of users. All activities activities should redirect here if the user is not authenticated.
+ */
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
-    private TextView register;
-    private EditText username, password;
+    private TextView registerView;
+    private EditText usernameField, passwordField;
     private Button loginButton;
     private String user, pass;
     private FirebaseAuth firebaseAuth;
@@ -32,13 +35,22 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        register = (TextView) findViewById(R.id.register);
-        username = (EditText) findViewById(R.id.username);
-        password = (EditText) findViewById(R.id.password);
+        registerView = (TextView) findViewById(R.id.register);
+        usernameField = (EditText) findViewById(R.id.username);
+        passwordField = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.loginButton);
-
         firebaseAuth = FirebaseAuth.getInstance();
 
+        initAuthListener();
+        initRegisterListener();
+        initLoginButtonListener();
+    }
+
+    /**
+     * Initializes the authentication listener that is called as soon as the authentication state changes (and once on creation).
+     * In case the user successfully logged in the activity is changed to the groups overview.
+     */
+    private void initAuthListener() {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -51,35 +63,59 @@ public class LoginActivity extends AppCompatActivity {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
             }
         };
+    }
 
-        register.setOnClickListener(new View.OnClickListener() {
+    /**
+     * Initializes the listener on the "register"-view to change to the register activity when clicked.
+     */
+    private void initRegisterListener() {
+        registerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
         });
+    }
 
+    /**
+     * Initializes the listener on the login button to check the sign in if the data is valid.
+     */
+    private void initLoginButtonListener() {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                user = username.getText().toString();
-                pass = password.getText().toString();
-
-                if (user.equals("")) {
-                    username.setError("can't be blank");
-                } else if (pass.equals("")) {
-                    password.setError("can't be blank");
-                } else {
+                if(isFormValid()){
                     signIn(user, pass);
-
                 }
             }
         });
     }
 
+    /**
+     * Checks if input in the form is valid.
+     * @return true if the input satisfies the constraints, false otherwise
+     */
+    private boolean isFormValid(){
+        user = usernameField.getText().toString();
+        pass = passwordField.getText().toString();
+
+        if (user.equals("")) {
+            usernameField.setError("can't be blank");
+        } else if (pass.equals("")) {
+            passwordField.setError("can't be blank");
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Attempts to sign in using the Firebase authentication.
+     * @param email The user's email
+     * @param password The user's password
+     */
     private void signIn(String email, String password) {
         firebaseAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -100,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(authListener);
     }
