@@ -1,5 +1,6 @@
 package com.rafael.rpg.rpgmessenger;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -8,8 +9,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -19,36 +20,46 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rafael.rpg.messengerclasses.Group;
-import com.rafael.rpg.messengerclasses.User;
+
+import java.util.ArrayList;
 
 public class GroupsActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
-    private ListView usersList;
-    protected TextView noUsersText;
+    private ListView groupsList;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
     private DatabaseReference firebaseDB;
-    private User user = null;
+    private ArrayAdapter<String> adapter;
+    private ArrayList<String> groupNameList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
 
-        usersList = (ListView)findViewById(R.id.usersList);
-        noUsersText = (TextView)findViewById(R.id.noUsersText);
+        groupsList = (ListView)findViewById(R.id.groupsList);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDB = FirebaseDatabase.getInstance().getReference();
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNameList);
+        groupsList.setAdapter(adapter);
 
+        initAuthListener();
+    }
+
+    /**
+     * Initializes the authentication listener that is called as soon as the authentication state changes (and once on creation).
+     * In case the user is not authenticated returns to the login activity.
+     */
+    private void initAuthListener() {
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
-                if (firebaseUser != null) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:GroupsActivity:" + firebaseUser.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:Login:" + user.getUid());
                     fetchGroups();
                 } else {
                     // User is signed out
@@ -66,11 +77,9 @@ public class GroupsActivity extends AppCompatActivity {
         firebaseDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Found groups: " + dataSnapshot.exists());
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                     // get the group ID
                     String groupID = child.getValue().toString();
-                    Log.d(TAG, "GroupNames: " + groupID);
 
                     // set up listener to get the group data
                     DatabaseReference firebaseDB2 = FirebaseDatabase.getInstance().getReference("/groups/" + groupID + "/");
@@ -79,9 +88,10 @@ public class GroupsActivity extends AppCompatActivity {
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             // map the group to a Group.class instance and print the title
                             Group group = dataSnapshot.getValue(Group.class);
-                            Log.d(TAG, group.getTitle());
 
-                            // create a new element in the listview
+                            // create a new element in the list view for the group
+                            groupNameList.add(group.getTitle());
+                            adapter.notifyDataSetChanged();
                         }
 
                         @Override

@@ -14,23 +14,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Group ID"
-        android:textSize="30dp"
-        android:gravity="center"
-        android:layout_marginBottom="20dp"/>
-
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/groupID"
-        android:inputType="text"
-        android:maxLines="1"
-        android:hint="enter ugroup ID"
-        android:layout_marginBottom="10dp"/>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="Group Name"
         android:textSize="30dp"
         android:gravity="center"

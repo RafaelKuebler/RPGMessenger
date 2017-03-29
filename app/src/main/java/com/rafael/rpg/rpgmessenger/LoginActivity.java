@@ -24,9 +24,11 @@ public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
     private TextView registerView;
-    private EditText usernameField, passwordField;
+    private EditText usernameField;
+    private EditText passwordField;
     private Button loginButton;
-    private String user, pass;
+    private String user;
+    private String pass;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authListener;
 
@@ -80,7 +82,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the listener on the login button to check the sign in if the data is valid.
+     * Initializes the listener on the login button to sign in if the data is valid.
      */
     private void initLoginButtonListener() {
         loginButton.setOnClickListener(new View.OnClickListener() {

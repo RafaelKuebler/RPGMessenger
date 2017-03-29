@@ -20,58 +20,88 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.rafael.rpg.messengerclasses.User;
 
+/**
+ * Activity that handles the registration of new users.
+ */
 public class RegisterActivity extends AppCompatActivity {
     private static final String TAG = "EmailPassword";
 
-    private EditText usernameField, passwordField;
-    private Button registerButton;
     private TextView loginView;
+    private EditText usernameField;
+    private EditText passwordField;
+    private Button registerButton;
+    private String user;
+    private String pass;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference firebaseDB;
     private FirebaseAuth.AuthStateListener authListener;
+    private DatabaseReference firebaseDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // get references to fields and views
         usernameField = (EditText)findViewById(R.id.username);
         passwordField = (EditText)findViewById(R.id.password);
         registerButton = (Button)findViewById(R.id.registerButton);
         loginView = (TextView)findViewById(R.id.login);
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDB = FirebaseDatabase.getInstance().getReference();
 
-        // if the user wants to login change back to login activity
+        initAuthListener();
+        initLoginListener();
+        initRegisterButtonListener();
+    }
+
+    /**
+     * Initializes the listener on the "login"-view to change to the login activity when clicked.
+     */
+    private void initLoginListener(){
         loginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
             }
         });
+    }
 
-        // if the user wants to register check input and register him
+    /**
+     * Initializes the listener on the register button to check the create an account if the data is valid.
+     */
+    private void initRegisterButtonListener(){
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = usernameField.getText().toString();
-                String pass = passwordField.getText().toString();
-
-                if(user.equals("")){
-                    usernameField.setError("can't be blank");
-                }
-                else if(pass.equals("")){
-                    passwordField.setError("can't be blank");
-                }
-                else {
+                if(isFormValid()){
                     createAccount(user, pass);
                 }
             }
         });
+    }
 
-        // the moment the user has been authenticated: change to group view activity
+    /**
+     * Checks if input in the form is valid.
+     * @return true if the input satisfies the constraints, false otherwise
+     */
+    private boolean isFormValid(){
+        user = usernameField.getText().toString();
+        pass = passwordField.getText().toString();
+
+        if (user.equals("")) {
+            usernameField.setError("can't be blank");
+        } else if (pass.equals("")) {
+            passwordField.setError("can't be blank");
+        } else {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Initializes the authentication listener that is called as soon as the authentication state changes (and once on creation).
+     * In case the user is not logged in returns to the login screen.
+     */
+    public void initAuthListener(){
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -94,7 +124,11 @@ public class RegisterActivity extends AppCompatActivity {
         };
     }
 
-    // create a new account with the specified email and password, input has to be already sanitized!
+    /**
+     * Creates a new account.
+     * @param email The user's email
+     * @param password The user's password
+     */
     private void createAccount(String email, String password) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -104,7 +138,7 @@ public class RegisterActivity extends AppCompatActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Authentication failed!",
+                            Toast.makeText(RegisterActivity.this, "Registration failed!",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

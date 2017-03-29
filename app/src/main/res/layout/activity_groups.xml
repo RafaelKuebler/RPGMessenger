@@ -10,15 +10,8 @@
     tools:context="com.rafael.rpg.rpgmessenger.GroupsActivity"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="No users found!"
-        android:id="@+id/noUsersText"
-        android:visibility="gone"/>
-
     <ListView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/usersList"/>
+        android:id="@+id/groupsList"/>
 </LinearLayout>
