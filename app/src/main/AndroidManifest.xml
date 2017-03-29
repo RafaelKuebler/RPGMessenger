@@ -20,11 +20,14 @@
         <activity android:name=".ChatActivity"
             android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity" />
         <activity android:name=".NewGroupActivity"
-            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity" />
+            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity"
+            android:label="New Group"/>
         <activity android:name=".SettingsActivity"
-            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity" />
-        <activity android:name=".InfoActivity"
-            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity" />
+            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity"
+            android:label="Settings" />
+        <activity android:name=".AboutActivity"
+            android:parentActivityName="com.rafael.rpg.rpgmessenger.GroupsActivity"
+            android:label="About" />
 
     </application>
 

@@ -1,6 +1,5 @@
 package com.rafael.rpg.rpgmessenger;
 
-import android.app.ListActivity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +59,6 @@ public class GroupsActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:Login:" + user.getUid());
-                    fetchGroups();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -82,7 +80,7 @@ public class GroupsActivity extends AppCompatActivity {
                     String groupID = child.getValue().toString();
 
                     // set up listener to get the group data
-                    DatabaseReference firebaseDB2 = FirebaseDatabase.getInstance().getReference("/groups/" + groupID + "/");
+                    DatabaseReference firebaseDB2 = FirebaseDatabase.getInstance().getReference("/groups/" + groupID);
                     firebaseDB2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -127,8 +125,8 @@ public class GroupsActivity extends AppCompatActivity {
             case R.id.settings:
                 startActivity(new Intent(GroupsActivity.this, SettingsActivity.class));
                 return true;
-            case R.id.app_info:
-                startActivity(new Intent(GroupsActivity.this, InfoActivity.class));
+            case R.id.app_about:
+                startActivity(new Intent(GroupsActivity.this, AboutActivity.class));
                 return true;
             case R.id.log_out:
                 FirebaseAuth.getInstance().signOut();
@@ -142,6 +140,19 @@ public class GroupsActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         firebaseAuth.addAuthStateListener(authListener);
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        fetchGroups();
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        groupNameList.clear();
+        adapter.notifyDataSetChanged();
     }
 
     @Override

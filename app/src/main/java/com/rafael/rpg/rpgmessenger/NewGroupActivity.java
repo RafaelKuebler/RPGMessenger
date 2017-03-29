@@ -24,7 +24,6 @@ public class NewGroupActivity extends AppCompatActivity {
 
     private EditText groupNameField;
     private Button createGroupButton;
-    private Button checkGroupButton;
     private DatabaseReference usersDBReference;
     private DatabaseReference groupsDBReference;
     private FirebaseAuth firebaseAuth;
@@ -36,31 +35,12 @@ public class NewGroupActivity extends AppCompatActivity {
 
         groupNameField = (EditText) findViewById(R.id.groupName);
         createGroupButton = (Button) findViewById(R.id.createGroupButton);
-        checkGroupButton = (Button) findViewById(R.id.checkGroupButton);
         firebaseAuth = FirebaseAuth.getInstance();
-
-        // deactivate the button until the validity of the data is checked
-        checkGroupButton.setEnabled(false);
 
         usersDBReference = FirebaseDatabase.getInstance().getReference(DBProperties.USERS_PATH);
         groupsDBReference = FirebaseDatabase.getInstance().getReference(DBProperties.GROUPS_PATH);
 
-        //initCheckGroupButtonListener();
         initCreateGroupButtonListener();
-    }
-
-    /**
-     * Initializes the listener on the "Check Group"-Button to check the existence of a group with that name in the database.
-     */
-    private void initCheckGroupButtonListener(){
-        checkGroupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String groupName = groupNameField.getText().toString();
-
-                doesGroupExistInDB(groupName);
-            }
-        });
     }
 
     /**
@@ -77,30 +57,6 @@ public class NewGroupActivity extends AppCompatActivity {
                 } else {
                     storeGroupInDB(groupName);
                 }
-            }
-        });
-    }
-
-    /**
-     * Checks if the group already exists in the database.
-     * @param groupName The name of the group
-     */
-    private void doesGroupExistInDB(String groupName){
-        groupsDBReference.child(groupName).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.exists()) {
-                    // the group does not exist in the database
-                    createGroupButton.setEnabled(true);
-                } else {
-                    // the group exists
-                    createGroupButton.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
             }
         });
     }
