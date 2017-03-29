@@ -5,4 +5,5 @@
     <string name="settings">Ajustes</string>
     <string name="app_about">Acerca</string>
     <string name="log_out">Cerrar sesión</string>
+    <string name="app_about_text">Esta aplicación ha sido creada por Rafael Kübler da Silva. Si tiene sugerencias no dude en contactarme!</string>
 </resources>

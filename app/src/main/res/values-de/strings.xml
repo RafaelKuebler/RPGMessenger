@@ -5,4 +5,5 @@
     <string name="settings">Einstellungen</string>
     <string name="app_about">Information</string>
     <string name="log_out">Ausloggen</string>
+    <string name="app_about_text">Diese App wurde von Rafael Kübler da Silva erstellt. Kontaktieren Sie mich wenn Sie Anregungen haben!</string>
 </resources>
