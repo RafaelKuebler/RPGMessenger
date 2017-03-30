@@ -21,6 +21,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingLeft="@dimen/form_horizontal_margin"
+            android:paddingRight="@dimen/form_horizontal_margin"
+            android:paddingTop="@dimen/form_vertical_margin"
+            android:paddingBottom="@dimen/form_vertical_margin"
             android:id="@+id/layout1">
 
         </LinearLayout>

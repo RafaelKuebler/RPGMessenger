@@ -61,7 +61,7 @@ public class NewGroupActivity extends AppCompatActivity {
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    startActivity(new Intent(NewGroupActivity.this, LoginActivity.class));
+                    finish();
                 }
             }
         };

@@ -4,7 +4,10 @@
 
     <item android:id="@+id/group_info"
         android:icon="@drawable/ic_info_white_24dp"
-        android:title="Group Info"
-        app:showAsAction="ifRoom"/>
+        android:title="Group Info"/>
+
+    <item android:id="@+id/delete_group"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete group"/>
 
 </menu>

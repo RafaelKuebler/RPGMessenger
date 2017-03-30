@@ -6,6 +6,7 @@ import java.util.List;
 public class Group {
     private String title = "";
     private List<String> memberIDs = new ArrayList<>();
+    private List<String> messages = new ArrayList<>();
 
     public Group(){
         // default constructor required for firebase database
@@ -21,6 +22,10 @@ public class Group {
 
     public List<String> getMemberIDs(){
         return memberIDs;
+    }
+
+    public void addMessage(String message){
+        messages.add(message);
     }
 
     public void addMember(String member){

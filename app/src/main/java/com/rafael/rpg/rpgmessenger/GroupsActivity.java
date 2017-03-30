@@ -1,6 +1,7 @@
 package com.rafael.rpg.rpgmessenger;
 
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +42,7 @@ public class GroupsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups);
 
-        groupsList = (ListView)findViewById(R.id.groupsList);
+        groupsList = (ListView) findViewById(R.id.groupsList);
 
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNameList);
         groupsList.setAdapter(adapter);
@@ -52,13 +54,13 @@ public class GroupsActivity extends AppCompatActivity {
     /**
      * Initializes the listener on the list view to detect when an item was clicked and start the chat activity.
      */
-    public void initGroupsListListener(){
+    public void initGroupsListListener() {
         groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // get group id and pass to chat activity
                 Intent chatActivityIntent = new Intent(GroupsActivity.this, ChatActivity.class);
-                chatActivityIntent.putExtra("chatID", groupIDList.get(position));
-                chatActivityIntent.putExtra("chatName", groupNameList.get(position));
+                chatActivityIntent.putExtra("groupID", groupIDList.get(position));
+                chatActivityIntent.putExtra("groupName", groupNameList.get(position));
                 startActivity(chatActivityIntent);
             }
         });
@@ -87,7 +89,7 @@ public class GroupsActivity extends AppCompatActivity {
         };
     }
 
-    private void fetchGroups(){
+    private void fetchGroups() {
         firebaseDB = FirebaseDatabase.getInstance().getReference("users/" + firebaseAuth.getCurrentUser().getUid() + "/groups/");
 
         firebaseDB.addValueEventListener(new ValueEventListener() {
@@ -102,13 +104,15 @@ public class GroupsActivity extends AppCompatActivity {
                     firebaseDB2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            // map the group to a Group.class instance and print the title
-                            Group group = dataSnapshot.getValue(Group.class);
+                            if(dataSnapshot.exists()) {
+                                // map the group to a Group.class instance and print the title
+                                Group group = dataSnapshot.getValue(Group.class);
 
-                            // create a new element in the list view for the group
-                            groupNameList.add(group.getTitle());
-                            groupIDList.add(groupID);
-                            adapter.notifyDataSetChanged();
+                                // create a new element in the list view for the group
+                                groupNameList.add(group.getTitle());
+                                groupIDList.add(groupID);
+                                adapter.notifyDataSetChanged();
+                            }
                         }
 
                         @Override
@@ -156,18 +160,15 @@ public class GroupsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
+        groupNameList.clear();
+        adapter.notifyDataSetChanged();
         firebaseAuth.addAuthStateListener(authListener);
     }
 
     @Override
-    public void onResume(){
-        super.onResume();
-    }
-
-    @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         groupNameList.clear();
         adapter.notifyDataSetChanged();
