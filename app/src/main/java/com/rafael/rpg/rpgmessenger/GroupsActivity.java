@@ -12,7 +12,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -51,14 +50,15 @@ public class GroupsActivity extends AppCompatActivity {
     }
 
     /**
-     * Initializes the listener on the list view to detect when an item was clicked.
+     * Initializes the listener on the list view to detect when an item was clicked and start the chat activity.
      */
     public void initGroupsListListener(){
         groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // get group id and pass to chat activity
-                Intent chatActivityIntent = new Intent(GroupsActivity.this, LoginActivity.class);
+                Intent chatActivityIntent = new Intent(GroupsActivity.this, ChatActivity.class);
                 chatActivityIntent.putExtra("chatID", groupIDList.get(position));
+                chatActivityIntent.putExtra("chatName", groupNameList.get(position));
                 startActivity(chatActivityIntent);
             }
         });
@@ -76,7 +76,8 @@ public class GroupsActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:Login:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
+                    fetchGroups();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
@@ -87,13 +88,12 @@ public class GroupsActivity extends AppCompatActivity {
     }
 
     private void fetchGroups(){
-        Log.d(TAG, "Fetching groups for: " + firebaseAuth.getCurrentUser().getUid());
         firebaseDB = FirebaseDatabase.getInstance().getReference("users/" + firebaseAuth.getCurrentUser().getUid() + "/groups/");
 
         firebaseDB.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot child : dataSnapshot.getChildren()){
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
                     // get the group ID
                     final String groupID = child.getValue().toString();
 
@@ -164,7 +164,6 @@ public class GroupsActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
-        fetchGroups();
     }
 
     @Override

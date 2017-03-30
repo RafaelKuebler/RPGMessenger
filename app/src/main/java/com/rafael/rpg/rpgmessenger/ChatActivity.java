@@ -35,8 +35,8 @@ public class ChatActivity extends AppCompatActivity {
         messageField = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
 
-        Intent intent = getIntent();
-        chatID = intent.getStringExtra("chatID");
+        chatID = getIntent().getStringExtra("chatID");
+        setTitle(getIntent().getStringExtra("chatName"));
 
         initAuthListener();
     }
@@ -53,7 +53,7 @@ public class ChatActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:Login:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");

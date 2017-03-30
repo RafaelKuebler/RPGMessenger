@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
     android:gravity="bottom"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
     <EditText
         android:layout_width="match_parent"
@@ -13,9 +15,9 @@
         android:textColorHint="#CFD8DC"
         android:textColor="#CFD8DC"
         android:hint="Write a message..."
+        android:layout_marginLeft="@dimen/form_horizontal_margin"
         android:id="@+id/messageArea"
-        android:maxHeight="80dp"
-        />
+        android:maxHeight="80dp"/>
 
     <ImageView
         android:layout_width="match_parent"
