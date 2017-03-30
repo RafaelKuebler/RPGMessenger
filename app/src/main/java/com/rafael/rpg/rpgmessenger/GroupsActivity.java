@@ -34,6 +34,7 @@ public class GroupsActivity extends AppCompatActivity {
     private DatabaseReference firebaseDB;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> groupNameList = new ArrayList<>();
+    private ArrayList<String> groupIDList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,12 +56,10 @@ public class GroupsActivity extends AppCompatActivity {
     public void initGroupsListListener(){
         groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object o = groupsList.getItemAtPosition(position);
-                String str=(String) o;
-
-                // for now just toasts the string
-                // next step: get group id and pass to chat activity
-                Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+                // get group id and pass to chat activity
+                Intent chatActivityIntent = new Intent(GroupsActivity.this, LoginActivity.class);
+                chatActivityIntent.putExtra("chatID", groupIDList.get(position));
+                startActivity(chatActivityIntent);
             }
         });
     }
@@ -96,7 +95,7 @@ public class GroupsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot child : dataSnapshot.getChildren()){
                     // get the group ID
-                    String groupID = child.getValue().toString();
+                    final String groupID = child.getValue().toString();
 
                     // set up listener to get the group data
                     DatabaseReference firebaseDB2 = FirebaseDatabase.getInstance().getReference("/groups/" + groupID);
@@ -108,6 +107,7 @@ public class GroupsActivity extends AppCompatActivity {
 
                             // create a new element in the list view for the group
                             groupNameList.add(group.getTitle());
+                            groupIDList.add(groupID);
                             adapter.notifyDataSetChanged();
                         }
 

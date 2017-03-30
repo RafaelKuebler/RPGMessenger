@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,6 +34,9 @@ public class ChatActivity extends AppCompatActivity {
         sendButton = (ImageView)findViewById(R.id.sendButton);
         messageField = (EditText)findViewById(R.id.messageArea);
         scrollView = (ScrollView)findViewById(R.id.scrollView);
+
+        Intent intent = getIntent();
+        chatID = intent.getStringExtra("chatID");
 
         initAuthListener();
     }
@@ -63,6 +67,7 @@ public class ChatActivity extends AppCompatActivity {
     public void onStart(){
         super.onStart();
         firebaseAuth.addAuthStateListener(authListener);
+        Toast.makeText(getBaseContext(), chatID, Toast.LENGTH_SHORT).show();
     }
 
     @Override
