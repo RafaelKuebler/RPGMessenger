@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,7 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.rafael.rpg.messengerclasses.Group;
+import com.rafael.rpg.dbwrappers.Group;
 
 import java.util.ArrayList;
 
@@ -39,12 +42,27 @@ public class GroupsActivity extends AppCompatActivity {
 
         groupsList = (ListView)findViewById(R.id.groupsList);
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseDB = FirebaseDatabase.getInstance().getReference();
         adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, groupNameList);
         groupsList.setAdapter(adapter);
 
+        initGroupsListListener();
         initAuthListener();
+    }
+
+    /**
+     * Initializes the listener on the list view to detect when an item was clicked.
+     */
+    public void initGroupsListListener(){
+        groupsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object o = groupsList.getItemAtPosition(position);
+                String str=(String) o;
+
+                // for now just toasts the string
+                // next step: get group id and pass to chat activity
+                Toast.makeText(getBaseContext(), str, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     /**
@@ -52,6 +70,7 @@ public class GroupsActivity extends AppCompatActivity {
      * In case the user is not authenticated returns to the login activity.
      */
     private void initAuthListener() {
+        firebaseAuth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

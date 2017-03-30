@@ -41,7 +41,6 @@ public class LoginActivity extends AppCompatActivity {
         usernameField = (EditText) findViewById(R.id.username);
         passwordField = (EditText) findViewById(R.id.password);
         loginButton = (Button) findViewById(R.id.loginButton);
-        firebaseAuth = FirebaseAuth.getInstance();
 
         initAuthListener();
         initRegisterListener();
@@ -53,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
      * In case the user successfully logged in the activity is changed to the groups overview.
      */
     private void initAuthListener() {
+        firebaseAuth = FirebaseAuth.getInstance();
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {

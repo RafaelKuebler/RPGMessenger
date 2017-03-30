@@ -1,4 +1,4 @@
-package com.rafael.rpg.messengerclasses;
+package com.rafael.rpg.dbwrappers;
 
 import java.util.ArrayList;
 import java.util.List;

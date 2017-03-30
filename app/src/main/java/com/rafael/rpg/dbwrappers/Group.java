@@ -1,9 +1,7 @@
-package com.rafael.rpg.messengerclasses;
+package com.rafael.rpg.dbwrappers;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Group {
     private String title = "";

@@ -1,4 +1,4 @@
-package com.rafael.rpg.properties;
+package com.rafael.rpg.dbproperties;
 
 public abstract class DBProperties {
     public static final String USERS_PATH = "users";
