@@ -73,7 +73,7 @@ public class GroupsActivity extends BaseActivity {
     }
 
     private void fetchGroups() {
-        getDBRefToUserGroups().addValueEventListener(new ValueEventListener() {
+        getDBRefToCurrentUserGroups().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -126,8 +126,6 @@ public class GroupsActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "selected options menu");
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.new_group:
                 startActivity(new Intent(GroupsActivity.this, NewGroupActivity.class));

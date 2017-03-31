@@ -1,52 +1,28 @@
 package com.rafael.rpg.rpgmessenger;
 
-import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.rafael.rpg.dbproperties.DBProperties;
-import com.rafael.rpg.dbwrappers.Group;
 import com.rafael.rpg.diceroller.DiceRoller;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-public class ChatActivity extends AppCompatActivity {
-    private static final String TAG = "EmailPassword";
-
+public class ChatActivity extends BaseActivity {
     private String groupID;
     private LinearLayout layout;
     private ImageView sendButton;
     private EditText messageField;
     private ScrollView scrollView;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authListener;
-    private DatabaseReference messageDBReference;
-    private DatabaseReference groupsDBReference;
     private DiceRoller diceRoller = new DiceRoller();
 
     @Override
@@ -61,10 +37,6 @@ public class ChatActivity extends AppCompatActivity {
 
         groupID = getIntent().getStringExtra("groupID");
         setTitle(getIntent().getStringExtra("groupName"));
-        messageDBReference = FirebaseDatabase.getInstance().getReference(DBProperties.MESSAGES_PATH + "/" + groupID);
-        groupsDBReference = FirebaseDatabase.getInstance().getReference(DBProperties.GROUPS_PATH + "/" + groupID);
-
-        initAuthListener();
 
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,38 +49,35 @@ public class ChatActivity extends AppCompatActivity {
                         int roll = diceRoller.roll(splitMessage[1]);
                         message = splitMessage[1] + " : " + Integer.toString(roll);
                     }
-                    messageDBReference.push().setValue(message);
+                    getDBRefToGroupMessages(groupID).push().setValue(message);
                     messageField.setText("");
                 }
             }
         });
     }
 
-    /**
-     * Initializes the authentication listener that is called as soon as the authentication state changes (and once on creation).
-     * In case the user is not authenticated returns to the login activity.
-     */
-    private void initAuthListener() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
-                    fetchMessages();
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    startActivity(new Intent(ChatActivity.this, LoginActivity.class));
-                }
-            }
-        };
+    @Override
+    public void onStart() {
+        super.onStart();
+        layout.removeAllViews();
+    }
+
+    @Override
+    protected void onUserSignIn() {
+        super.onUserSignIn();
+
+        fetchMessages();
+    }
+
+    @Override
+    protected void onUserSignOut() {
+        super.onUserSignOut();
+
+        finish();
     }
 
     private void fetchMessages() {
-        messageDBReference.addChildEventListener(new ChildEventListener() {
+        getDBRefToGroupMessages(groupID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 String message = dataSnapshot.getValue().toString();
@@ -161,7 +130,7 @@ public class ChatActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.d(TAG, "selected options menu");
+        log("selected options menu");
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.roll_dice:
@@ -172,31 +141,16 @@ public class ChatActivity extends AppCompatActivity {
                 return true;
             case R.id.delete_group:
                 // delete messages
-                messageDBReference.setValue(null);
+                getDBRefToGroupMessages(groupID).setValue(null);
                 // delete inside each member
 
                 // delete from groups
-                groupsDBReference.setValue(null);
+                getDBRefToGroup(groupID).setValue(null);
 
                 finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        layout.removeAllViews();
-        firebaseAuth.addAuthStateListener(authListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (authListener != null) {
-            firebaseAuth.removeAuthStateListener(authListener);
         }
     }
 }

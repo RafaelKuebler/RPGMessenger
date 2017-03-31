@@ -12,8 +12,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.rafael.rpg.dbwrappers.User;
 
 /**
@@ -24,7 +22,6 @@ public class RegisterActivity extends BaseActivity {
     private EditText usernameField;
     private EditText passwordField;
     private Button registerButton;
-    private DatabaseReference firebaseDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,8 +33,6 @@ public class RegisterActivity extends BaseActivity {
         registerButton = (Button)findViewById(R.id.registerButton);
         loginView = (TextView)findViewById(R.id.login);
 
-        firebaseDB = FirebaseDatabase.getInstance().getReference();
-
         initLoginListener();
         initRegisterButtonListener();
     }
@@ -47,7 +42,7 @@ public class RegisterActivity extends BaseActivity {
         super.onUserSignIn();
 
         User newUser = new User("Username");
-        firebaseDB.child("users").child(firebaseUser.getUid()).setValue(newUser);
+        getDBRefToCurrentUser().setValue(newUser);
 
         Intent intent = new Intent(RegisterActivity.this, GroupsActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

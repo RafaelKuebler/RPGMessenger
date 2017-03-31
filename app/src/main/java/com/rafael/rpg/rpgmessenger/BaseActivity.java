@@ -11,11 +11,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class BaseActivity extends AppCompatActivity {
-    protected static final String TAG = "EmailPassword";
+    private static final String USERS_PATH = "users";
+    private static final String GROUPS_PATH = "groups";
+    private static final String MESSAGES_PATH = "messages";
+    private static final String TAG = "RPGMessenger";
+
     protected FirebaseAuth firebaseAuth;
-    protected FirebaseAuth.AuthStateListener authListener;
+    private FirebaseAuth.AuthStateListener authListener;
     protected FirebaseUser firebaseUser;
-    protected FirebaseDatabase firebaseDB;
+    private FirebaseDatabase firebaseDB;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,41 +41,53 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     protected void onUserSignIn() {
-        Log.d(TAG, "onAuthStateChanged:signed_in: " + firebaseUser.getUid());
+        log("onAuthStateChanged:signed_in: " + firebaseUser.getUid());
     }
 
     protected void onUserSignOut() {
-        Log.d(TAG, "onAuthStateChanged:signed_out");
+        log("onAuthStateChanged:signed_out");
     }
 
-    protected DatabaseReference getDBRefToUser(){
+    protected final DatabaseReference getDBRefToUsers(){
+        return firebaseDB.getReference(USERS_PATH);
+    }
+
+    protected final DatabaseReference getDBRefToGroups(){
+        return firebaseDB.getReference(GROUPS_PATH);
+    }
+
+    protected final DatabaseReference getDBRefToCurrentUser(){
         return getDBRefToUser(firebaseUser.getUid());
     }
 
-    protected DatabaseReference getDBRefToUser(String userID){
-        return firebaseDB.getReference("users/" + userID);
+    protected final DatabaseReference getDBRefToUser(String userID){
+        return getDBRefToUsers().child(userID);
     }
 
-    protected DatabaseReference getDBRefToUserGroups(){
+    protected final DatabaseReference getDBRefToCurrentUserGroups(){
         return getDBRefToUserGroups(firebaseUser.getUid());
     }
 
-    protected DatabaseReference getDBRefToUserGroups(String userID){
-        return firebaseDB.getReference("users/" + userID + "/groups/");
+    protected final DatabaseReference getDBRefToUserGroups(String userID){
+        return getDBRefToUser(userID).child(GROUPS_PATH);
     }
 
-    protected DatabaseReference getDBRefToGroups(String groupID){
-        return firebaseDB.getReference("groups/" + groupID);
+    protected final DatabaseReference getDBRefToGroup(String groupID){
+        return getDBRefToGroups().child(groupID);
     }
 
-    protected DatabaseReference getDBRefToGroupMessages(String groupID){
-        return firebaseDB.getReference("messages/" + groupID);
+    protected final DatabaseReference getDBRefToGroupMessages(String groupID){
+        return getDBRefToGroup(groupID).child(MESSAGES_PATH);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(authListener);
+    }
+
+    protected final void log(String text){
+        Log.d(TAG, text);
     }
 
     @Override
