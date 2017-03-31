@@ -7,17 +7,21 @@ import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class BaseActivity extends AppCompatActivity {
     protected static final String TAG = "EmailPassword";
     protected FirebaseAuth firebaseAuth;
     protected FirebaseAuth.AuthStateListener authListener;
     protected FirebaseUser firebaseUser;
+    protected FirebaseDatabase firebaseDB;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        firebaseDB = FirebaseDatabase.getInstance();
 
         authListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -38,6 +42,30 @@ public class BaseActivity extends AppCompatActivity {
 
     protected void onUserSignOut() {
         Log.d(TAG, "onAuthStateChanged:signed_out");
+    }
+
+    protected DatabaseReference getDBRefToUser(){
+        return getDBRefToUser(firebaseUser.getUid());
+    }
+
+    protected DatabaseReference getDBRefToUser(String userID){
+        return firebaseDB.getReference("users/" + userID);
+    }
+
+    protected DatabaseReference getDBRefToUserGroups(){
+        return getDBRefToUserGroups(firebaseUser.getUid());
+    }
+
+    protected DatabaseReference getDBRefToUserGroups(String userID){
+        return firebaseDB.getReference("users/" + userID + "/groups/");
+    }
+
+    protected DatabaseReference getDBRefToGroups(String groupID){
+        return firebaseDB.getReference("groups/" + groupID);
+    }
+
+    protected DatabaseReference getDBRefToGroupMessages(String groupID){
+        return firebaseDB.getReference("messages/" + groupID);
     }
 
     @Override

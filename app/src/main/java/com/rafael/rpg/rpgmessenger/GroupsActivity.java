@@ -1,8 +1,6 @@
 package com.rafael.rpg.rpgmessenger;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -14,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,13 +21,8 @@ import com.rafael.rpg.dbwrappers.Group;
 
 import java.util.ArrayList;
 
-public class GroupsActivity extends AppCompatActivity {
-    private static final String TAG = "EmailPassword";
-
+public class GroupsActivity extends BaseActivity {
     private ListView groupsList;
-    private FirebaseAuth firebaseAuth;
-    private FirebaseAuth.AuthStateListener authListener;
-    private DatabaseReference firebaseDB;
     private ArrayAdapter<String> adapter;
     private ArrayList<String> groupNameList = new ArrayList<>();
     private ArrayList<String> groupIDList = new ArrayList<>();
@@ -46,7 +38,23 @@ public class GroupsActivity extends AppCompatActivity {
         groupsList.setAdapter(adapter);
 
         initGroupsListListener();
-        initAuthListener();
+    }
+
+    @Override
+    protected void onUserSignIn() {
+        super.onUserSignIn();
+
+        fetchGroups();
+    }
+
+    @Override
+    protected void onUserSignOut() {
+        super.onUserSignOut();
+
+        Intent intent = new Intent(GroupsActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 
     /**
@@ -64,36 +72,8 @@ public class GroupsActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Initializes the authentication listener that is called as soon as the authentication state changes (and once on creation).
-     * In case the user is not authenticated returns to the login activity.
-     */
-    private void initAuthListener() {
-        firebaseAuth = FirebaseAuth.getInstance();
-        authListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in: " + user.getUid());
-                    fetchGroups();
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Intent intent = new Intent(GroupsActivity.this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                    finish();
-                }
-            }
-        };
-    }
-
     private void fetchGroups() {
-        firebaseDB = FirebaseDatabase.getInstance().getReference("users/" + firebaseAuth.getCurrentUser().getUid() + "/groups/");
-
-        firebaseDB.addValueEventListener(new ValueEventListener() {
+        getDBRefToUserGroups().addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
@@ -163,20 +143,6 @@ public class GroupsActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        firebaseAuth.addAuthStateListener(authListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (authListener != null) {
-            firebaseAuth.removeAuthStateListener(authListener);
         }
     }
 }
