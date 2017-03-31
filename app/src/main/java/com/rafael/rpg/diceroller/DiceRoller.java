@@ -8,9 +8,7 @@ public class DiceRoller {
     private static Pattern diceNotation = Pattern.compile("([1-9]\\d*)?d([1-9]\\d*)([+]\\d+)?");
 
     public int roll(String description) {
-        int amount;
-        int die;
-        int add;
+        int amount, die, add;
 
         Matcher matcher = diceNotation.matcher(description);
         if (matcher.matches()) {

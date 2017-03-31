@@ -166,6 +166,8 @@ public class ChatActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.roll_dice:
                 return true;
+            case R.id.add_member:
+                return true;
             case R.id.group_info:
                 return true;
             case R.id.delete_group:

@@ -96,7 +96,7 @@ public class GroupsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    // get the group ID
+                    // get the group ID of each child
                     final String groupID = child.getValue().toString();
 
                     // set up listener to get the group data
@@ -104,16 +104,20 @@ public class GroupsActivity extends AppCompatActivity {
                     firebaseDB2.addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            if(dataSnapshot.exists()) {
+                            if (dataSnapshot.exists()) { // in case the group was changed (deleted etc.)
                                 // map the group to a Group.class instance and print the title
                                 Group group = dataSnapshot.getValue(Group.class);
 
                                 // create a new element in the list view for the group
-                                if(!groupIDList.contains(groupID)) {
+                                if (!groupIDList.contains(groupID)) {
                                     groupNameList.add(group.getTitle());
                                     groupIDList.add(groupID);
                                     adapter.notifyDataSetChanged();
                                 }
+                            } else { // in case the group was deleted
+                                groupNameList.remove(groupIDList.indexOf(groupID));
+                                groupIDList.remove(groupID);
+                                adapter.notifyDataSetChanged();
                             }
                         }
 
@@ -164,16 +168,7 @@ public class GroupsActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        groupNameList.clear();
-        adapter.notifyDataSetChanged();
         firebaseAuth.addAuthStateListener(authListener);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        groupNameList.clear();
-        adapter.notifyDataSetChanged();
     }
 
     @Override
