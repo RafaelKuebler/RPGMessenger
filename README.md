@@ -28,7 +28,7 @@ Though instant messaging apps exist that allow for the most basic characteristic
 - [ ] More ideas? Contact me!
 
 ## Frameworks
-[Google Firebase](https://firebase.google.com/) - Authentication and message exchange.
+[Google Firebase](https://firebase.google.com/) - Authentication and database.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.txt](LICENSE.txt) file for details
