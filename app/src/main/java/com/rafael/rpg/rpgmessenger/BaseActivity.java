@@ -48,46 +48,50 @@ public class BaseActivity extends AppCompatActivity {
         log("onAuthStateChanged:signed_out");
     }
 
-    protected final DatabaseReference getDBRefToUsers(){
+    protected final DatabaseReference getDBRefToUsers() {
         return firebaseDB.getReference(USERS_PATH);
     }
 
-    protected final DatabaseReference getDBRefToGroups(){
+    protected final DatabaseReference getDBRefToGroups() {
         return firebaseDB.getReference(GROUPS_PATH);
     }
 
-    protected final DatabaseReference getDBRefToCurrentUser(){
+    protected final DatabaseReference getDBRefToMessages() {
+        return firebaseDB.getReference(MESSAGES_PATH);
+    }
+
+    protected final DatabaseReference getDBRefToCurrentUser() {
         return getDBRefToUser(firebaseUser.getUid());
     }
 
-    protected final DatabaseReference getDBRefToUser(String userID){
+    protected final DatabaseReference getDBRefToUser(String userID) {
         return getDBRefToUsers().child(userID);
     }
 
-    protected final DatabaseReference getDBRefToCurrentUserGroups(){
+    protected final DatabaseReference getDBRefToCurrentUserGroups() {
         return getDBRefToUserGroups(firebaseUser.getUid());
     }
 
-    protected final DatabaseReference getDBRefToUserGroups(String userID){
+    protected final DatabaseReference getDBRefToUserGroups(String userID) {
         return getDBRefToUser(userID).child(GROUPS_PATH);
     }
 
-    protected final DatabaseReference getDBRefToGroup(String groupID){
+    protected final DatabaseReference getDBRefToGroup(String groupID) {
         return getDBRefToGroups().child(groupID);
     }
 
-    protected final DatabaseReference getDBRefToGroupMessages(String groupID){
-        return getDBRefToGroup(groupID).child(MESSAGES_PATH);
+    protected final DatabaseReference getDBRefToGroupMessages(String groupID) {
+        return getDBRefToMessages().child(groupID);
+    }
+
+    protected final void log(String text) {
+        Log.d(TAG, text);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(authListener);
-    }
-
-    protected final void log(String text){
-        Log.d(TAG, text);
     }
 
     @Override

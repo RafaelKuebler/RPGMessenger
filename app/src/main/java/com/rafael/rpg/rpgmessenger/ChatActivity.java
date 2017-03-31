@@ -38,6 +38,10 @@ public class ChatActivity extends BaseActivity {
         groupID = getIntent().getStringExtra("groupID");
         setTitle(getIntent().getStringExtra("groupName"));
 
+        initSendButtonListener();
+    }
+
+    private void initSendButtonListener() {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,7 +67,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     @Override
-    protected void onUserSignIn() {
+    public void onUserSignIn() {
         super.onUserSignIn();
 
         fetchMessages();
