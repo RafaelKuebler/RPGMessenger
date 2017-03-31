@@ -60,7 +60,10 @@ public class RegisterActivity extends AppCompatActivity {
         loginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -109,13 +112,13 @@ public class RegisterActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:Register:" + user.getUid());
-
-                    Log.d(TAG, "Adding user to user list");
                     User newUser = new User("Username");
                     firebaseDB.child("users").child(user.getUid()).setValue(newUser);
-                    Log.d(TAG, "Success");
 
-                    startActivity(new Intent(RegisterActivity.this, GroupsActivity.class));
+                    Intent intent = new Intent(RegisterActivity.this, GroupsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
                 } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
