@@ -8,28 +8,28 @@ public class Group {
     private List<String> memberIDs = new ArrayList<>();
     private List<String> messages = new ArrayList<>();
 
-    public Group(){
+    public Group() {
         // default constructor required for firebase database
     }
 
-    public Group(String title){
+    public Group(String title) {
         this.title = title;
     }
 
-    public String getTitle(){
+    public String getTitle() {
         return title;
     }
 
-    public List<String> getMemberIDs(){
+    public List<String> getMemberIDs() {
         return memberIDs;
     }
 
-    public void addMessage(String message){
+    public void addMessage(String message) {
         messages.add(message);
     }
 
-    public void addMember(String member){
-        if(!memberIDs.contains(member)){
+    public void addMember(String member) {
+        if (!memberIDs.contains(member)) {
             memberIDs.add(member);
         }
     }

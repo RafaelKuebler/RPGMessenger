@@ -19,7 +19,7 @@ import com.google.firebase.auth.AuthResult;
  */
 public class LoginActivity extends BaseActivity {
     private TextView registerView;
-    private EditText usernameField;
+    private EditText emailField;
     private EditText passwordField;
     private Button loginButton;
 
@@ -29,8 +29,8 @@ public class LoginActivity extends BaseActivity {
         setContentView(R.layout.activity_login);
 
         registerView = (TextView) findViewById(R.id.register);
-        usernameField = (EditText) findViewById(R.id.username);
-        passwordField = (EditText) findViewById(R.id.password);
+        emailField = (EditText) findViewById(R.id.login_email);
+        passwordField = (EditText) findViewById(R.id.login_password);
         loginButton = (Button) findViewById(R.id.loginButton);
 
         initRegisterListener();
@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = usernameField.getText().toString();
+                String user = emailField.getText().toString();
                 String pass = passwordField.getText().toString();
 
                 if (isLoginDataValid(user, pass)) {
@@ -86,7 +86,7 @@ public class LoginActivity extends BaseActivity {
      */
     private boolean isLoginDataValid(String user, String pass) {
         if (user.equals("")) {
-            usernameField.setError("can't be blank");
+            emailField.setError("can't be blank");
         } else if (pass.equals("")) {
             passwordField.setError("can't be blank");
         } else {

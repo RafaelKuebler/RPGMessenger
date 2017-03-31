@@ -18,8 +18,10 @@ import com.rafael.rpg.dbwrappers.User;
  * Activity that handles the registration of new users.
  */
 public class RegisterActivity extends BaseActivity {
+
     private TextView loginView;
     private EditText usernameField;
+    private EditText emailField;
     private EditText passwordField;
     private Button registerButton;
 
@@ -28,10 +30,11 @@ public class RegisterActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        usernameField = (EditText)findViewById(R.id.username);
-        passwordField = (EditText)findViewById(R.id.password);
-        registerButton = (Button)findViewById(R.id.registerButton);
-        loginView = (TextView)findViewById(R.id.login);
+        usernameField = (EditText) findViewById(R.id.username);
+        emailField = (EditText) findViewById(R.id.register_email);
+        passwordField = (EditText) findViewById(R.id.register_password);
+        registerButton = (Button) findViewById(R.id.registerButton);
+        loginView = (TextView) findViewById(R.id.login);
 
         initLoginListener();
         initRegisterButtonListener();
@@ -41,7 +44,7 @@ public class RegisterActivity extends BaseActivity {
     protected void onUserSignIn() {
         super.onUserSignIn();
 
-        User newUser = new User("Username");
+        User newUser = new User(usernameField.getText().toString());
         getDBRefToCurrentUser().setValue(newUser);
 
         Intent intent = new Intent(RegisterActivity.this, GroupsActivity.class);
@@ -53,7 +56,7 @@ public class RegisterActivity extends BaseActivity {
     /**
      * Initializes the listener on the "login"-view to change to the login activity when clicked.
      */
-    private void initLoginListener(){
+    private void initLoginListener() {
         loginView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,15 +71,16 @@ public class RegisterActivity extends BaseActivity {
     /**
      * Initializes the listener on the register button to check the create an account if the data is valid.
      */
-    private void initRegisterButtonListener(){
+    private void initRegisterButtonListener() {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user = usernameField.getText().toString();
+                String name = usernameField.getText().toString();
+                String email = emailField.getText().toString();
                 String pass = passwordField.getText().toString();
 
-                if(isRegisterDataValid(user, pass)){
-                    createAccount(user, pass);
+                if (isRegisterDataValid(name, email, pass)) {
+                    createAccount(email, pass);
                 }
             }
         });
@@ -84,11 +88,14 @@ public class RegisterActivity extends BaseActivity {
 
     /**
      * Checks if input in the form is valid.
+     *
      * @return true if the input satisfies the constraints, false otherwise
      */
-    private boolean isRegisterDataValid(String user, String pass){
-        if (user.equals("")) {
+    private boolean isRegisterDataValid(String name, String email, String pass) {
+        if (name.equals("")) {
             usernameField.setError("can't be blank");
+        } else if (email.equals("")) {
+            emailField.setError("can't be blank");
         } else if (pass.equals("")) {
             passwordField.setError("can't be blank");
         } else {
@@ -99,7 +106,8 @@ public class RegisterActivity extends BaseActivity {
 
     /**
      * Creates a new account.
-     * @param email The user's email
+     *
+     * @param email    The user's email
      * @param password The user's password
      */
     private void createAccount(String email, String password) {
@@ -111,7 +119,7 @@ public class RegisterActivity extends BaseActivity {
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(RegisterActivity.this, "Registration failed!",
+                            Toast.makeText(RegisterActivity.this, task.getException().getMessage(),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

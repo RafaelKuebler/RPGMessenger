@@ -134,14 +134,15 @@ public class ChatActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        log("selected options menu");
-        // Handle item selection
         switch (item.getItemId()) {
             case R.id.roll_dice:
                 return true;
             case R.id.add_member:
                 return true;
             case R.id.group_info:
+                return true;
+            case R.id.delete_messages:
+                getDBRefToGroupMessages(groupID).setValue(null);
                 return true;
             case R.id.delete_group:
                 // delete messages

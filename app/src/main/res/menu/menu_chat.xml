@@ -2,21 +2,30 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/roll_dice"
+    <item
+        android:id="@+id/roll_dice"
         android:icon="@drawable/dice_white"
         android:title="Delete group"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
-    <item android:id="@+id/add_member"
+    <item
+        android:id="@+id/add_member"
         android:icon="@drawable/ic_add_white_24dp"
-        android:title="Add member"/>
+        android:title="Add member" />
 
-    <item android:id="@+id/group_info"
+    <item
+        android:id="@+id/group_info"
         android:icon="@drawable/ic_info_white_24dp"
-        android:title="Group Info"/>
+        android:title="Group Info" />
 
-    <item android:id="@+id/delete_group"
+    <item
+        android:id="@+id/delete_messages"
         android:icon="@android:drawable/ic_menu_delete"
-        android:title="Delete group"/>
+        android:title="Delete messages" />
+
+    <item
+        android:id="@+id/delete_group"
+        android:icon="@android:drawable/ic_menu_delete"
+        android:title="Delete group" />
 
 </menu>

@@ -3,19 +3,19 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
     android:paddingBottom="@dimen/form_vertical_margin"
     android:paddingLeft="@dimen/form_horizontal_margin"
     android:paddingRight="@dimen/form_horizontal_margin"
     android:paddingTop="@dimen/form_vertical_margin"
-    tools:context="com.rafael.rpg.rpgmessenger.LoginActivity"
-    android:orientation="vertical"
-    android:gravity="center">
+    tools:context="com.rafael.rpg.rpgmessenger.LoginActivity">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/app_about_text"
-        android:textSize="20dp"
-        android:gravity="center"/>
+        android:textSize="20dp" />
 
 </LinearLayout>
