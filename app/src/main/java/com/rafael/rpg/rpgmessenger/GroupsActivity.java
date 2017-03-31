@@ -109,9 +109,11 @@ public class GroupsActivity extends AppCompatActivity {
                                 Group group = dataSnapshot.getValue(Group.class);
 
                                 // create a new element in the list view for the group
-                                groupNameList.add(group.getTitle());
-                                groupIDList.add(groupID);
-                                adapter.notifyDataSetChanged();
+                                if(!groupIDList.contains(groupID)) {
+                                    groupNameList.add(group.getTitle());
+                                    groupIDList.add(groupID);
+                                    adapter.notifyDataSetChanged();
+                                }
                             }
                         }
 

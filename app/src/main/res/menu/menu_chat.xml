@@ -2,6 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/roll_dice"
+        android:icon="@drawable/dice_white"
+        android:title="Delete group"
+        app:showAsAction="always"/>
+
     <item android:id="@+id/group_info"
         android:icon="@drawable/ic_info_white_24dp"
         android:title="Group Info"/>

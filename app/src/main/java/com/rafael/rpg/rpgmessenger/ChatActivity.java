@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.rafael.rpg.dbproperties.DBProperties;
 import com.rafael.rpg.dbwrappers.Group;
+import com.rafael.rpg.diceroller.DiceRoller;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -46,16 +47,17 @@ public class ChatActivity extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener authListener;
     private DatabaseReference messageDBReference;
     private DatabaseReference groupsDBReference;
+    private DiceRoller diceRoller = new DiceRoller();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        layout = (LinearLayout)findViewById(R.id.layout1);
-        sendButton = (ImageView)findViewById(R.id.sendButton);
-        messageField = (EditText)findViewById(R.id.messageArea);
-        scrollView = (ScrollView)findViewById(R.id.scrollView);
+        layout = (LinearLayout) findViewById(R.id.layout1);
+        sendButton = (ImageView) findViewById(R.id.sendButton);
+        messageField = (EditText) findViewById(R.id.messageArea);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
 
         groupID = getIntent().getStringExtra("groupID");
         setTitle(getIntent().getStringExtra("groupName"));
@@ -69,7 +71,12 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String message = messageField.getText().toString();
 
-                if(!message.equals("")){
+                if (!message.equals("")) {
+                    String splitMessage[] = message.split(" ", 2);
+                    if (splitMessage[0].equals("\\roll")) {
+                        int roll = diceRoller.roll(splitMessage[1]);
+                        message = splitMessage[1] + " : " + Integer.toString(roll);
+                    }
                     messageDBReference.push().setValue(message);
                     messageField.setText("");
                 }
@@ -100,7 +107,7 @@ public class ChatActivity extends AppCompatActivity {
         };
     }
 
-    private void fetchMessages(){
+    private void fetchMessages() {
         messageDBReference.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -127,7 +134,7 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
 
-    public void addMessageBox(String message, int type){
+    public void addMessageBox(String message, int type) {
         TextView textView = new TextView(ChatActivity.this);
         textView.setText(message);
         textView.setTextSize(18);
@@ -135,10 +142,9 @@ public class ChatActivity extends AppCompatActivity {
         lp.setMargins(0, 0, 0, 10);
         textView.setLayoutParams(lp);
 
-        if(type == 1) {
+        if (type == 1) {
             textView.setBackgroundResource(R.drawable.rounded_corner1);
-        }
-        else{
+        } else {
             textView.setBackgroundResource(R.drawable.rounded_corner2);
         }
 
@@ -158,6 +164,8 @@ public class ChatActivity extends AppCompatActivity {
         Log.d(TAG, "selected options menu");
         // Handle item selection
         switch (item.getItemId()) {
+            case R.id.roll_dice:
+                return true;
             case R.id.group_info:
                 return true;
             case R.id.delete_group:
@@ -176,7 +184,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onStart(){
+    public void onStart() {
         super.onStart();
         layout.removeAllViews();
         firebaseAuth.addAuthStateListener(authListener);
