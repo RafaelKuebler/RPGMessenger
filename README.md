@@ -20,7 +20,7 @@ Though instant messaging apps exist that allow for the most basic characteristic
 @Liala The fire elemental prepares to blast you away!
 (Player's user name: George)
 ``
-- [x] Dice rolls ``\roll 1d20+2``
+- [x] Dice rolls ``\roll 1d20+1d6+4``
 - [ ] Custom dice roll saving ``\roll 1d6 shortsword`` ``\roll shortsword``
 - [ ] Character portraits next to messages
 - [ ] Offtopic conversations ``\offtopic``
