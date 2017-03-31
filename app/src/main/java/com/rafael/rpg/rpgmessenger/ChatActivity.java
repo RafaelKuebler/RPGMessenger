@@ -50,8 +50,8 @@ public class ChatActivity extends BaseActivity {
                 if (!message.equals("")) {
                     String splitMessage[] = message.split(" ", 2);
                     if (splitMessage[0].equals("\\roll")) {
-                        int roll = diceRoller.roll(splitMessage[1]);
-                        message = splitMessage[1] + " : " + Integer.toString(roll);
+                        String rollResult = diceRoller.roll(splitMessage[1]);
+                        message = splitMessage[1] + " : " + rollResult;
                     }
                     getDBRefToGroupMessages(groupID).push().setValue(message);
                     messageField.setText("");
@@ -142,12 +142,12 @@ public class ChatActivity extends BaseActivity {
             case R.id.group_info:
                 return true;
             case R.id.delete_messages:
-                getDBRefToGroupMessages(groupID).setValue(null);
+                deleteAllMessages();
                 return true;
             case R.id.delete_group:
                 // delete messages
-                getDBRefToGroupMessages(groupID).setValue(null);
-                // delete inside each member
+                deleteAllMessages();
+                // delete group inside each member
 
                 // delete from groups
                 getDBRefToGroup(groupID).setValue(null);
@@ -157,5 +157,10 @@ public class ChatActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void deleteAllMessages(){
+        getDBRefToGroupMessages(groupID).setValue(null);
+        layout.removeAllViews();
     }
 }
