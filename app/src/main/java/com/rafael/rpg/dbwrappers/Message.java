@@ -2,7 +2,7 @@ package com.rafael.rpg.dbwrappers;
 
 public class Message {
     private String text;
-    private String author;
+    private String sender;
     private int style;
 
     public Message() {
@@ -10,7 +10,7 @@ public class Message {
 
     public Message(String text, String author, int style) {
         this.text = text;
-        this.author = author;
+        this.sender = author;
         this.style = style;
     }
 
@@ -18,8 +18,8 @@ public class Message {
         return text;
     }
 
-    public String getAuthor() {
-        return author;
+    public String getSender() {
+        return sender;
     }
 
     public int getStyle() {

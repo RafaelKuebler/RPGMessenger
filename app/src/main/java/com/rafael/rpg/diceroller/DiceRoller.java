@@ -4,11 +4,11 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class DiceRoller {
+public abstract class DiceRoller {
     private static Pattern diceNotation = Pattern.compile("([1-9]\\d*)?d([1-9]\\d*)");
     private static Pattern digit = Pattern.compile("(\\d+)");
 
-    public String roll(String description) {
+    public static String roll(String description) {
         String rolls[] = description.split("[+]");
         String totalString = "";
         int total = 0;
@@ -44,7 +44,7 @@ public class DiceRoller {
         return totalString + "=" + String.valueOf(total);
     }
 
-    private int calculateRoll(int amount, int die) {
+    private static int calculateRoll(int amount, int die) {
         int random = 0;
         Random randomGenerator = new Random();
 

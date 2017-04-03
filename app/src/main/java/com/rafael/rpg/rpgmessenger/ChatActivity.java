@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.rafael.rpg.dbwrappers.Message;
 import com.rafael.rpg.diceroller.DiceRoller;
 
 public class ChatActivity extends BaseActivity {
@@ -23,7 +24,6 @@ public class ChatActivity extends BaseActivity {
     private ImageView sendButton;
     private EditText messageField;
     private ScrollView scrollView;
-    private DiceRoller diceRoller = new DiceRoller();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,15 +45,15 @@ public class ChatActivity extends BaseActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String message = messageField.getText().toString();
+                String messageText = messageField.getText().toString();
 
-                if (!message.equals("")) {
-                    String splitMessage[] = message.split(" ", 2);
-                    if (splitMessage[0].equals("\\roll")) {
-                        String rollResult = diceRoller.roll(splitMessage[1]);
-                        message = splitMessage[1] + " : " + rollResult;
-                    }
+                if (!messageText.equals("")) {
+                    messageText = MessageHandler.handle(messageText);
+
+                    // push message to DB
+                    Message message = new Message(messageText, firebaseUser.getUid(), 1);
                     getDBRefToGroupMessages(groupID).push().setValue(message);
+
                     messageField.setText("");
                 }
             }
@@ -69,14 +69,12 @@ public class ChatActivity extends BaseActivity {
     @Override
     public void onUserSignIn() {
         super.onUserSignIn();
-
         fetchMessages();
     }
 
     @Override
     protected void onUserSignOut() {
         super.onUserSignOut();
-
         finish();
     }
 
@@ -84,8 +82,8 @@ public class ChatActivity extends BaseActivity {
         getDBRefToGroupMessages(groupID).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                String message = dataSnapshot.getValue().toString();
-                addMessageBox(message, 1);
+                Message message = dataSnapshot.getValue(Message.class);
+                addMessageBox(message);
             }
 
             @Override
@@ -107,7 +105,10 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
-    public void addMessageBox(String message, int type) {
+    public void addMessageBox(Message messageWrapper) {
+        String message = messageWrapper.getText();
+        int type = messageWrapper.getStyle();
+
         TextView textView = new TextView(ChatActivity.this);
         textView.setText(message);
         textView.setTextSize(18);
@@ -159,7 +160,7 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
-    private void deleteAllMessages(){
+    private void deleteAllMessages() {
         getDBRefToGroupMessages(groupID).setValue(null);
         layout.removeAllViews();
     }
